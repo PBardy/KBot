@@ -9,6 +9,7 @@ const channels = ['no-humans-allowed', 'bot-commands'];
 
 const COMMAND_PREFIX = "!";
 const MAX_PINGS_ALLOWED = 60;
+const MAX_SUMMONS_ALLOWED = 100;
 
 const processMessage = (msg) => {
   const split = msg.content.split(" ");
@@ -48,13 +49,16 @@ const add = (msg, parameters) => {
     return;
   }
 
+  const length = Object.key(summons).length;
   const [user, ...imageOrText] = parameters;
   if (user.match(/[<@!>]/g)) {
-    summons[user] = imageOrText.join(" ");
+    if (length < MAX_SUMMONS_ALLOWED) {
+      summons[user] = imageOrText.join(" ");
 
-    msg.reply("Summoning added");
-    saveSummons();
-    return;
+      msg.reply("Summoning added");
+      saveSummons();
+      return;
+    }
   }
 
   msg.reply("Invalid syntax! Summonings are made by '!add <user> <img | text>'");
